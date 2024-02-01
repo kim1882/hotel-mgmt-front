@@ -67,7 +67,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
             <FormControl fullWidth>
               <Select
                 id="roomTypeSelector"
-                value={roomType?.id}
+                value={`${roomType?.id}`}
                 onChange={handleChange}
               >
                 {roomTypes.map((type) => (
