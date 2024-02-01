@@ -1,11 +1,11 @@
 import * as React from "react";
 import PageWrapper from "@/components/PageWrapper";
-import Rooms from "@/components/Rooms";
+import RoomList from "@/components/RoomList";
 
 export default function HotelManagementPage() {
   return (
     <PageWrapper>
-      <Rooms />
+      <RoomList />
     </PageWrapper>
   );
 }

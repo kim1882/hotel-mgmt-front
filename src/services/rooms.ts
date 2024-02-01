@@ -1,3 +1,5 @@
+import { IRoom } from "@/types";
+
 const API_URL = process.env.API_URL;
 
 export const loadRoomsService = async () => {
@@ -28,4 +30,21 @@ export const loadBookingsService = async () => {
   }
   const rooms = await res.json();
   return rooms;
+};
+
+export const updateRoomService = async (id: number, room: IRoom) => {
+  const options = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(room),
+  };
+  const res = await fetch(`${API_URL}/rooms/${id}`, options);
+  if (!res.ok) {
+    const message = `An error has occured: ${res.status}`;
+    throw new Error(message);
+  }
+  const updatedRoom = await res.json();
+  return updatedRoom;
 };

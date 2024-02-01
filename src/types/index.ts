@@ -1,6 +1,6 @@
 export interface IRoom {
   id: number;
-  roomTypeId: number;
+  room_type_id: number;
 }
 
 export interface IRoomType {
@@ -11,8 +11,8 @@ export interface IRoomType {
 
 export interface IBooking {
   id: number;
-  roomId: number;
-  guestName: string;
+  room_id: number;
+  guest_name: string;
   checkin: Date;
   checkout: Date;
 }

@@ -9,6 +9,7 @@ import {
   loadRoomTypesService,
   loadRoomsService,
   loadBookingsService,
+  updateRoomService,
 } from "@/services/rooms";
 
 const initialState: HotelMgmtSliceState = {
@@ -60,6 +61,19 @@ export const hotelMgmtSlice = createSlice({
       .addCase(loadBookings.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || null;
+      })
+      // Update Room
+      .addCase(updateRoom.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateRoom.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        console.log(action.payload);
+        // state.rooms = action.payload;
+      })
+      .addCase(updateRoom.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || null;
       });
   },
 });
@@ -81,6 +95,14 @@ export const loadBookings = createAsyncThunk(
   "hotelMgmt/loadBookings",
   async () => {
     const response = await loadBookingsService();
+    return response;
+  }
+);
+
+export const updateRoom = createAsyncThunk(
+  "hotelMgmt/updateRoom",
+  async ({ id, room }: { id: number; room: IRoom }) => {
+    const response = await updateRoomService(id, room);
     return response;
   }
 );
