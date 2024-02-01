@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    API_URL: "https://hotel-mgmt-back.vercel.app",
+  },
   async redirects() {
     return [
       {
