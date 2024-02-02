@@ -30,3 +30,20 @@ export const createBookingService = async (
   const createdBooking = await res.json();
   return createdBooking;
 };
+
+export const updateBookingService = async (id: number, booking: IBooking) => {
+  const options = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(booking),
+  };
+  const res = await fetch(`${API_URL}/bookings/${id}`, options);
+  if (!res.ok) {
+    const message = `An error has occured: ${res.status}`;
+    throw new Error(message);
+  }
+  const updatedBooking = await res.json();
+  return updatedBooking;
+};

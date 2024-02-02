@@ -20,7 +20,12 @@ import {
   TextField,
 } from "@mui/material";
 import { ModalActions } from "../RoomList/RoomList.styles";
-import { createBooking, updateRoom, useDispatch } from "@/lib/redux";
+import {
+  createBooking,
+  updateBooking,
+  updateRoom,
+  useDispatch,
+} from "@/lib/redux";
 
 interface RoomItemProps {
   room: IRoom;
@@ -65,6 +70,16 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
     dispatch(createBooking(bookingToCreate));
   };
 
+  const handlCheckIn = (booking: IBooking) => {
+    const bookingToUpdate: IBooking = { ...booking, checkin: new Date() };
+    dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+  };
+
+  const handlCheckOut = (booking: IBooking) => {
+    const bookingToUpdate: IBooking = { ...booking, checkout: new Date() };
+    dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+  };
+
   const determinateAction = () => {
     let action = (
       <Action onClick={() => setShowBookRoomModal(true)}>
@@ -76,7 +91,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
     );
     if (currentBooking) {
       action = (
-        <Action onClick={() => console.log("CheckIn", currentBooking)}>
+        <Action onClick={() => handlCheckIn(currentBooking)}>
           <CheckinIcon />
         </Action>
       );
@@ -86,7 +101,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
       );
       if (currentBooking) {
         action = (
-          <Action onClick={() => console.log("CheckOut", currentBooking)}>
+          <Action onClick={() => handlCheckOut(currentBooking)}>
             <CheckoutIcon />
           </Action>
         );
