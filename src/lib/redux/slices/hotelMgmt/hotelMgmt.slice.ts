@@ -5,12 +5,9 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import {
-  loadRoomTypesService,
-  loadRoomsService,
-  loadBookingsService,
-  updateRoomService,
-} from "@/services/rooms";
+import { loadRoomsService, updateRoomService } from "@/services/rooms";
+import { loadRoomTypesService } from "@/services/roomTypes";
+import { loadBookingsService, createBookingService } from "@/services/bookings";
 
 const initialState: HotelMgmtSliceState = {
   rooms: [],
@@ -77,6 +74,19 @@ export const hotelMgmtSlice = createSlice({
       .addCase(updateRoom.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || null;
+      })
+      // Create Booking
+      .addCase(createBooking.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createBooking.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const createdItem = action.payload;
+        state.bookings = [...state.bookings, createdItem];
+      })
+      .addCase(createBooking.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || null;
       });
   },
 });
@@ -106,6 +116,19 @@ export const updateRoom = createAsyncThunk(
   "hotelMgmt/updateRoom",
   async ({ id, room }: { id: number; room: IRoom }) => {
     const response = await updateRoomService(id, room);
+    return response;
+  }
+);
+
+export const createBooking = createAsyncThunk(
+  "hotelMgmt/createBooking",
+  async (newBooking: {
+    room_id: number;
+    guest_name: string;
+    checkin: Date | null;
+    checkout: Date | null;
+  }) => {
+    const response = await createBookingService(newBooking);
     return response;
   }
 );

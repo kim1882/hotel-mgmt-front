@@ -12,26 +12,6 @@ export const loadRoomsService = async () => {
   return rooms;
 };
 
-export const loadRoomTypesService = async () => {
-  const res = await fetch(`${API_URL}/room-types`);
-  if (!res.ok) {
-    const message = `An error has occured: ${res.status}`;
-    throw new Error(message);
-  }
-  const rooms = await res.json();
-  return rooms;
-};
-
-export const loadBookingsService = async () => {
-  const res = await fetch(`${API_URL}/bookings`);
-  if (!res.ok) {
-    const message = `An error has occured: ${res.status}`;
-    throw new Error(message);
-  }
-  const rooms = await res.json();
-  return rooms;
-};
-
 export const updateRoomService = async (id: number, room: IRoom) => {
   const options = {
     method: "PATCH",

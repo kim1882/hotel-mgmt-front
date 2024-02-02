@@ -13,6 +13,6 @@ export interface IBooking {
   id: number;
   room_id: number;
   guest_name: string;
-  checkin: Date;
-  checkout: Date;
+  checkin: Date | null;
+  checkout: Date | null;
 }

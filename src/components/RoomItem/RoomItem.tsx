@@ -3,6 +3,9 @@ import { Details, Item, Menu, Action } from "./RoomItem.styles";
 import {
   DeleteOutline as DeleteIcon,
   Edit as EditIcon,
+  Hotel as BookIcon,
+  Login as CheckinIcon,
+  Logout as CheckoutIcon,
 } from "@mui/icons-material";
 import { useState } from "react";
 import {
@@ -14,9 +17,10 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
 } from "@mui/material";
 import { ModalActions } from "../RoomList/RoomList.styles";
-import { updateRoom, useDispatch } from "@/lib/redux";
+import { createBooking, updateRoom, useDispatch } from "@/lib/redux";
 
 interface RoomItemProps {
   room: IRoom;
@@ -31,18 +35,64 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
   );
   const [showEditModal, setShowEditModal] = useState(false);
   const [roomTypeValue, setRoomTypeValue] = useState(room.room_type_id);
+  const [showBookRoomModal, setShowBookRoomModal] = useState(false);
+  const [guestNameValue, setGuestNameValue] = useState("");
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChangeRoomType = (event: SelectChangeEvent) => {
     setRoomTypeValue(Number(event.target.value));
   };
 
-  const handleSave = () => {
+  const handleChangeGuestName = (event: React.FocusEvent<HTMLInputElement>) => {
+    setGuestNameValue(event.target.value);
+  };
+
+  const handleSaveEditRoom = () => {
     const roomToUpdate: IRoom = {
       ...room,
       room_type_id: roomTypeValue,
     };
     dispatch(updateRoom({ id: room.id, room: roomToUpdate }));
     setShowEditModal(false);
+  };
+
+  const handleSaveBookRoom = () => {
+    const bookingToCreate: Omit<IBooking, "id"> = {
+      room_id: room.id,
+      guest_name: guestNameValue,
+      checkin: null,
+      checkout: null,
+    };
+    dispatch(createBooking(bookingToCreate));
+  };
+
+  const determinateAction = () => {
+    let action = (
+      <Action onClick={() => setShowBookRoomModal(true)}>
+        <BookIcon />
+      </Action>
+    );
+    let currentBooking = bookings.find(
+      (bookingItem) => bookingItem.checkin === null
+    );
+    if (currentBooking) {
+      action = (
+        <Action onClick={() => console.log("CheckIn", currentBooking)}>
+          <CheckinIcon />
+        </Action>
+      );
+    } else {
+      currentBooking = bookings.find(
+        (bookingItem) => bookingItem.checkout === null
+      );
+      if (currentBooking) {
+        action = (
+          <Action onClick={() => console.log("CheckOut", currentBooking)}>
+            <CheckoutIcon />
+          </Action>
+        );
+      }
+    }
+    return action;
   };
 
   return (
@@ -61,6 +111,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
         <Action onClick={() => setShowEditModal(true)}>
           <EditIcon />
         </Action>
+        {determinateAction()}
         <Action onClick={() => null}>
           <DeleteIcon />
         </Action>
@@ -73,7 +124,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
               <Select
                 id="roomTypeSelector"
                 value={`${roomTypeValue}`}
-                onChange={handleChange}
+                onChange={handleChangeRoomType}
               >
                 {roomTypes.map((type) => (
                   <MenuItem key={type.id} value={type.id}>
@@ -90,7 +141,48 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
               >
                 Cancel
               </Button>
-              <Button variant="contained" color="primary" onClick={handleSave}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveEditRoom}
+              >
+                Save
+              </Button>
+            </ModalActions>
+          </DialogContent>
+        </Dialog>
+      )}
+      {showBookRoomModal && (
+        <Dialog
+          open={showBookRoomModal}
+          onClose={() => setShowBookRoomModal(false)}
+        >
+          <DialogTitle>Book Room</DialogTitle>
+          <DialogContent>
+            <FormControl fullWidth>
+              <TextField
+                autoFocus
+                fullWidth
+                variant="outlined"
+                size="small"
+                defaultValue={guestNameValue}
+                placeholder="Guest name"
+                onBlur={handleChangeGuestName}
+              />
+            </FormControl>
+            <ModalActions>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => setShowBookRoomModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveBookRoom}
+              >
                 Save
               </Button>
             </ModalActions>
