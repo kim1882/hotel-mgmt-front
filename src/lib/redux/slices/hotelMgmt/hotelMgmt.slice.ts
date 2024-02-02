@@ -99,8 +99,10 @@ export const hotelMgmtSlice = createSlice({
       .addCase(updateBooking.fulfilled, (state, action) => {
         state.status = "succeeded";
         const updatedItem = action.payload;
-        console.log("updatedItem", updatedItem);
-        // state.bookings = [...state.bookings, createdItem];
+        state.bookings = state.bookings.map((booking) => {
+          if (booking.id === updatedItem.id) return updatedItem;
+          return booking;
+        });
       })
       .addCase(updateBooking.rejected, (state, action) => {
         state.status = "failed";

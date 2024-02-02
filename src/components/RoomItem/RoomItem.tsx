@@ -68,6 +68,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
       checkout: null,
     };
     dispatch(createBooking(bookingToCreate));
+    setShowBookRoomModal(false);
   };
 
   const handlCheckIn = (booking: IBooking) => {
