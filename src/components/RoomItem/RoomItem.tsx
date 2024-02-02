@@ -71,14 +71,18 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
     setShowBookRoomModal(false);
   };
 
-  const handlCheckIn = (booking: IBooking) => {
-    const bookingToUpdate: IBooking = { ...booking, checkin: new Date() };
-    dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+  const handlCheckIn = (booking: IBooking | undefined) => {
+    if (booking) {
+      const bookingToUpdate: IBooking = { ...booking, checkin: new Date() };
+      dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+    }
   };
 
-  const handlCheckOut = (booking: IBooking) => {
-    const bookingToUpdate: IBooking = { ...booking, checkout: new Date() };
-    dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+  const handlCheckOut = (booking: IBooking | undefined) => {
+    if (booking) {
+      const bookingToUpdate: IBooking = { ...booking, checkout: new Date() };
+      dispatch(updateBooking({ id: booking.id, booking: bookingToUpdate }));
+    }
   };
 
   const determinateAction = () => {
