@@ -30,11 +30,16 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
     (roomType) => roomType.id === room.room_type_id
   );
   const [showEditModal, setShowEditModal] = useState(false);
+  const [roomTypeValue, setRoomTypeValue] = useState(room.room_type_id);
 
   const handleChange = (event: SelectChangeEvent) => {
+    setRoomTypeValue(Number(event.target.value));
+  };
+
+  const handleSave = () => {
     const roomToUpdate: IRoom = {
       ...room,
-      room_type_id: Number(event.target.value),
+      room_type_id: roomTypeValue,
     };
     dispatch(updateRoom({ id: room.id, room: roomToUpdate }));
     setShowEditModal(false);
@@ -67,11 +72,13 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
             <FormControl fullWidth>
               <Select
                 id="roomTypeSelector"
-                value={`${roomType?.id}`}
+                value={`${roomTypeValue}`}
                 onChange={handleChange}
               >
                 {roomTypes.map((type) => (
-                  <MenuItem value={type.id}>{type.name}</MenuItem>
+                  <MenuItem key={type.id} value={type.id}>
+                    {type.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -83,11 +90,7 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => console.log("save")}
-              >
+              <Button variant="contained" color="primary" onClick={handleSave}>
                 Save
               </Button>
             </ModalActions>
