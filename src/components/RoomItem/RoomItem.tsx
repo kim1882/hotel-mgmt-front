@@ -1,7 +1,6 @@
 import { IBooking, IRoom, IRoomType } from "@/types";
 import { Details, Item, Menu, Action } from "./RoomItem.styles";
 import {
-  DeleteOutline as DeleteIcon,
   Edit as EditIcon,
   Hotel as BookIcon,
   Login as CheckinIcon,
@@ -18,6 +17,7 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { ModalActions } from "../RoomList/RoomList.styles";
 import {
@@ -83,18 +83,22 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
 
   const determinateAction = () => {
     let action = (
-      <Action onClick={() => setShowBookRoomModal(true)}>
-        <BookIcon />
-      </Action>
+      <Tooltip title="Book room">
+        <Action onClick={() => setShowBookRoomModal(true)}>
+          <BookIcon />
+        </Action>
+      </Tooltip>
     );
     let currentBooking = bookings.find(
       (bookingItem) => bookingItem.checkin === null
     );
     if (currentBooking) {
       action = (
-        <Action onClick={() => handlCheckIn(currentBooking)}>
-          <CheckinIcon />
-        </Action>
+        <Tooltip title="Check-In">
+          <Action onClick={() => handlCheckIn(currentBooking)}>
+            <CheckinIcon />
+          </Action>
+        </Tooltip>
       );
     } else {
       currentBooking = bookings.find(
@@ -102,9 +106,11 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
       );
       if (currentBooking) {
         action = (
-          <Action onClick={() => handlCheckOut(currentBooking)}>
-            <CheckoutIcon />
-          </Action>
+          <Tooltip title="Check-Out">
+            <Action onClick={() => handlCheckOut(currentBooking)}>
+              <CheckoutIcon />
+            </Action>
+          </Tooltip>
         );
       }
     }
@@ -124,13 +130,13 @@ const RoomItem = ({ room, roomTypes, bookings }: RoomItemProps) => {
         </div>
       </Details>
       <Menu>
-        <Action onClick={() => setShowEditModal(true)}>
-          <EditIcon />
-        </Action>
+        <Tooltip title="Edit Room Type">
+          <Action onClick={() => setShowEditModal(true)}>
+            <EditIcon />
+          </Action>
+        </Tooltip>
+
         {determinateAction()}
-        <Action onClick={() => null}>
-          <DeleteIcon />
-        </Action>
       </Menu>
       {showEditModal && (
         <Dialog open={showEditModal} onClose={() => setShowEditModal(false)}>
